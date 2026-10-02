@@ -12,8 +12,7 @@
 <script data-goatcounter="https://tula.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 <style>
-:root{color-scheme:light dark;--fg:CanvasText;--bg:Canvas;--mut:color-mix(in srgb,CanvasText 58%,Canvas);--line:color-mix(in srgb,CanvasText 14%,Canvas);--soft:color-mix(in srgb,CanvasText 6%,Canvas);--acc:CanvasText;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@supports (color:AccentColor){:root{--acc:AccentColor}}
+:root{color-scheme:light dark;--fg:CanvasText;--bg:Canvas;--mut:color-mix(in srgb,CanvasText 58%,Canvas);--line:color-mix(in srgb,CanvasText 14%,Canvas);--soft:color-mix(in srgb,CanvasText 6%,Canvas);--acc:#f07a10;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.5 'Golos Text',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%}
@@ -39,8 +38,9 @@ h2{position:sticky;top:env(safe-area-inset-top,0px);z-index:1;background:var(--b
 h2 small{display:block;font-weight:400;font-size:.78rem;color:var(--mut);letter-spacing:0}
 ul{list-style:none;margin:0;padding:0}
 section{content-visibility:auto;contain-intrinsic-size:auto 200px}
-li{display:grid;grid-template-columns:6.2rem 8.5rem 1fr;gap:0 .5rem;align-items:baseline;padding:.5rem 0;border-top:1px solid var(--line)}
-li b{font-weight:600}
+li{display:grid;grid-template-columns:3.7rem 8.5rem 1fr;gap:0 .5rem;align-items:baseline;padding:.5rem 0;border-top:1px solid var(--line)}
+li b{font-weight:600;line-height:1.25}
+li b small{display:block;margin-top:-.1em;font-size:.72em;line-height:1.05;font-weight:600;font-variant-caps:all-small-caps;letter-spacing:.04em}
 .d{color:var(--acc);font-weight:600}
 .d i{font-style:normal;color:var(--mut)}
 .d small{display:block;color:var(--mut);font-weight:400;font-size:.78rem;line-height:1.2}
@@ -73,9 +73,22 @@ footer a{color:var(--fg);text-underline-offset:.2em}
 .one .hl{display:flex;flex-wrap:wrap;gap:.3rem 1.1rem;margin:1.1rem 0 0;font-size:1.7rem;font-weight:800;line-height:1.15;letter-spacing:-.02em}
 .one .hl span{white-space:nowrap}
 .one .hh{margin:1.1rem 0 0;color:var(--mut);font-size:.85rem}
-.hit li{grid-template-columns:7.5rem 8.5rem 1fr}
-@media(max-width:30rem){.hit li{grid-template-columns:6.6rem 6.6rem 1fr}}
-@media(max-width:30rem){li{grid-template-columns:5.6rem 6.6rem 1fr}}
+.hit li{grid-template-columns:4.5rem 8.5rem 1fr}
+@media(max-width:30rem){.hit li{grid-template-columns:4.3rem 6.6rem 1fr}}
+@media(max-width:30rem){li{grid-template-columns:3.4rem 6.6rem 1fr}}
+.one{max-width:40rem}
+.one .hs{margin:0;border-top:4px solid var(--acc);padding-top:.9rem}
+.one .hs.m{font-size:1.7rem;font-weight:800;line-height:1.2;letter-spacing:-.02em}
+.cal{margin:1.25rem 0 0;max-width:21rem}
+.cal .cm{margin:0 0 .45rem;font-weight:800;font-size:1rem}
+.cal .cg+.cm{margin-top:1.1rem}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cg span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.95rem;border-radius:4px}
+.cg .w{aspect-ratio:auto;justify-content:center;color:var(--mut);font-size:.72rem;font-weight:600;padding-bottom:.15rem}
+.cg .c{background:var(--soft)}
+.cg .on{background:var(--acc);color:#fff;font-weight:800}
+.boil{margin:1rem 0 0;color:var(--mut);font-size:.85rem;line-height:1.4}
+.boil a{color:inherit;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -166,15 +179,39 @@ const hn=s=>nb(String(s)).replace(/ /g,'\u00a0'); /* «83 корп. А» не р
 const bt=i=>E(B[i]).replace(/\n/g,'<br>');
 const uq=a=>[...new Set(a)];
 const bn=h=>{const m=/^(\d+)([^\d].*)?$/.exec(String(h).trim());return m&&(!m[2]||/^\s*[A-Za-zА-Яа-яЁё]/.test(m[2]))?m[1]:null}; /* «10», «10а», «10 корп. 1» → 10 */
-const row=r=>`<li><b>${hn(r[4])}</b><span class="d">${dcell(r)}</span><span class="s">${bt(r[6])}${P[r[7]]?'<br>'+tel(r[7]):''}</span></li>`;
+const hk=s=>String(s).toLowerCase().replace(/ё/g,'е').replace(/[\s\-‑–.,]/g,'').replace(/[abcekmhoptx]/g,c=>({a:'а',b:'в',c:'с',e:'е',k:'к',m:'м',h:'н',o:'о',p:'р',t:'т',x:'х'}[c])).replace(/корпус|корп/g,'к').replace(/строение|стр/g,'~').replace(/^д(?=\d)/,''); /* «114 корп. 1» = «114к1» */
+const MK=/^(корп|корпус|к|стр|строение)$/;
+function splitHouse(tk){ /* где в запросе начинается номер дома: «114», «114 корп 1», «5 стр 2» */
+  for(let i=0;i<tk.length;i++){if(!/^\d/.test(tk[i].w)||tk[i].o)continue;const tl=tk.slice(i+1);
+    if(tl.length%2==0&&tl.every((x,j)=>j%2==0?MK.test(x.w):/^[\dа-яa-z]+$/i.test(x.w)))return i}
+  return -1}
+const hl=s=>{s=String(s).trim();const m=/^(\d+[А-Яа-яA-Za-z]?)\s+(\S.*)$/.exec(s);return m?hn(m[1])+'<small>'+hn(m[2])+'</small>':hn(s)}; /* «114 корп. 1» → «114» / «корп. 1»; дроби не трогаем */
+const row=r=>`<li><b>${hl(r[4])}</b><span class="d">${dcell(r)}</span><span class="s">${bt(r[6])}${P[r[7]]?'<br>'+tel(r[7]):''}</span></li>`;
 /* крупный блок: один дом, либо несколько домов улицы с одной датой включения */
+const MONN=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],WDM=['пн','вт','ср','чт','пт','сб','вс'];
+/* квадратный календарь: дни включения отопления выделены тёплым цветом */
+function cal(r){
+  if(r[5]<0)return '';
+  const a=dd(r[5]),e=endIndex(r);let b=e>=0&&e!=r[5]?dd(e):a;if(b<a)b=a;
+  let y=a.getFullYear(),m=a.getMonth(),o='',n0=0;
+  while((y<b.getFullYear()||(y==b.getFullYear()&&m<=b.getMonth()))&&n0++<4){
+    const f=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate();
+    let g=WDM.map(w=>`<span class="w">${w}</span>`).join('')+'<span></span>'.repeat(f);
+    for(let d=1;d<=n;d++){const t=new Date(y,m,d);g+=`<span class="c${t>=a&&t<=b?' on':''}">${d}</span>`}
+    o+=`<p class="cm">${MONN[m]} ${y}</p><div class="cg">${g}</div>`;
+    if(++m>11){m=0;y++}}
+  return `<div class="cal">${o}</div>`}
 function card(rs){const r=rs[0],bl=uq(rs.flatMap(x=>B[x[6]]?B[x[6]].split('\n'):[])).map(E).join('<br>'),ph=uq(rs.flatMap(x=>P[x[7]]?P[x[7]].split(';').map(y=>y.trim()):[])).join(';');
-  const pl=ph?telS(ph):'';
-  return `<article class="one"><p class="ttl">${ttl(r)}</p><h2>${E(ST[r[3]])}<small>${E(cap(r))}</small></h2>`+
-   (rs.length==1?`<div class="r"><b>${hn(r[4])}</b><span class="d">${dcellF(r)}</span><span class="s">${bl}</span></div>`
-    :`<div class="r"><span class="d">${dcellF(r)}</span><span class="s">${bl}</span></div><p class="hh">Дома, для которых действует эта дата:</p><div class="hl">${rs.map(x=>`<span>${hn(x[4])}</span>`).join('')}</div>`)+
-   (pl?`<span class="tel">Горячая линия: ${pl}</span>`:'')+`</article>`}
-const isSettlement=r=>/^п\.\s/i.test(String(SE[r[2]]));
+  const pl=ph?telS(ph):'',hs=uq(rs.map(x=>hn(x[4])));
+  const hb=hs.length==1?`<div class="hs"><b>${hs[0]}</b></div>`:`<p class="hs m">${hs.join(', ')}</p>`;
+  const bo=[bl,pl?'Горячая линия: '+pl:''].filter(Boolean).join('<br>');
+  return `<article class="one"><p class="ttl">${ttl(r)}</p><h2>${E(ST[r[3]])}<small>${E(cap(r))}</small></h2>${hb}${cal(r)}${bo?`<p class="boil">${bo}</p>`:''}</article>`}
+
+
+
+
+
+const isSettlement=r=>/^(п|рп|р\.п|пгт|пос|с|д)\.\s/i.test(String(SE[r[2]])); /* поселки, сёла, деревни — это область, даже если в данных значатся как Тула */
 const territory=r=>isSettlement(r)?1:r[0];
 const cap=r=>{const s=SE[r[2]],d=r[1]>=0?D[r[1]][0]:'';return d&&!d.startsWith(s.replace(/^\S+\.\s/,'').slice(0,5))?s+', '+d:s};
 /* ---- нечёткий поиск ---- */
@@ -195,10 +232,13 @@ function fuzzy(base,t){
     cache.set(n,v);if(v<best)best=v;return v};
   const ok=base.filter(r=>sc(r.n)<1e9);
   return ok.filter(r=>cache.get(r.n)==best)}
-function view(){
+function view(auto){
   const q=$('#q').value.trim();let t=[],h=null,warn='',hit=false,fzn=false;
-  if(q){const tk=numq(N(kb(q)).split(' ').filter(x=>x&&!/^(ул|улица|пр|проспект|мкр|д|дом)$/.test(x))),l=tk[tk.length-1];
-    if(l&&/^\d/.test(l.w)&&!l.o)h=tk.pop().w;t=tk.map(x=>x.w)}
+  if(q){const tk=numq(N(kb(q)).split(' ').filter(x=>x&&!/^(ул|улица|пр|проспект|мкр|д|дом)$/.test(x)));
+    while(tk.length>1&&MK.test(tk[tk.length-1].w))tk.pop(); /* «114 корп» без номера корпуса */
+    let i=splitHouse(tk);while(i>0&&MK.test(tk[i-1].w))i--; /* «стр. 1в»: слово перед номером тоже часть дома */
+    if(i>=0){h=tk.slice(i).map(x=>x.w).join(' ');t=tk.slice(0,i).map(x=>x.w)}else t=tk.map(x=>x.w)}
+
   let L=R.filter(r=>territory(r)==T&&(S==null||r[1]==S));
   if(q&&!t.length){warn='<p class="note">Добавьте название улицы, например «Ленина 10».</p>';L=[]}
   else if(t.length){
@@ -213,12 +253,13 @@ function view(){
         L=fuzzy(L0,tk);
         if(!L.length&&T===0&&S==null)L=fuzzy(R.filter(r=>territory(r)===1),tk);
         if(L.length){fzn=true;break}}}
-    if(h){const hh=Hn(h),pure=/^\d+$/.test(h),e=L.filter(r=>Hn(r[4])==hh||(pure&&bn(r[4])==h)); /* «10» находит и 10а, и 10 корп. 1 */
+    if(h){const hh=hk(h),pure=/^\d+$/.test(h),e=L.filter(r=>hk(r[4])==hh||(pure&&bn(r[4])==h)); /* «10» находит и 10а, и 10 корп. 1 */
       if(e.length){L=e;hit=true}else if(L.length)warn=`<p class="warn">Дома ${E(h)} нет в перечне для этой улицы. Ориентируйтесь на соседние дома.</p>`}
     if(!L.length&&!warn)warn='<p class="note">Ничего не нашлось. Проверьте написание улицы или попробуйте часть названия.</p>'}
   F=L;window.__n=L.length;
   /* один результат — одна улица и одна дата у всех найденных домов (корпуса и буквы тоже) */
   const one=q&&!warn&&L.length>0&&L.every(r=>r[2]==L[0][2]&&r[3]==L[0][3]&&r[5]==L[0][5]&&r[10]==L[0][10]);
+  if(auto){const want=q&&one?'map':'list';if(want!=mode)ui(want)} /* нашли дом — сразу карта; ищем дальше — снова улицы */
   $('#hit').innerHTML=one?card(L):'';
   $('#info').innerHTML=one?'':warn+(fzn&&L.length?'<p class="note">Точных совпадений нет — показаны похожие.</p>':'')+(L.length?`<p class="cnt">Домов: ${L.length}</p>`:'');
   let o='',pk='';
@@ -262,7 +303,7 @@ function drawMap(){
   if(!ensureMap())return;
   if(!ready){pend=drawMap;return}
   map.resize();
-  const key=r=>S!=null?'s'+r[2]:T==0?(HAS_TD&&r[1]>=0?'d'+r[1]:'s'+r[2]):r[0]==0?'t':(r[1]>=0?'d'+r[1]:'s'+r[2]);
+  const key=r=>S!=null?'s'+r[2]:T==0?(HAS_TD&&r[1]>=0?'d'+r[1]:'s'+r[2]):territory(r)==0?'t':(r[1]>=0?'d'+r[1]:'s'+r[2]);
   const G=new Map(),cnt={},hs=[],bb=[];
   F.forEach(r=>{cnt[r[5]]=(cnt[r[5]]||0)+1;if(r[8]==null)return;const k=key(r);if(!G.has(k))G.set(k,[]);G.get(k).push(r);bb.push([r[9],r[8]]);
     hs.push({type:'Feature',geometry:{type:'Point',coordinates:[r[9],r[8]]},properties:{c:col(r[5]),html:`<b>${E(ST[r[3]])}, ${hn(r[4])}</b><br>${E(cap(r))}<div class="map-popup-date">${r[5]>=0?rng(r):'Дата не указана'}</div>${r[5]>=0?`<div class="map-popup-day">${rwd(r)}</div>`:''}${B[r[6]]?'<br>'+bt(r[6]):''}${P[r[7]]?'<br>'+tel(r[7]):''}`}})});
@@ -276,8 +317,9 @@ function drawMap(){
   if(bb.length){const b=new maplibregl.LngLatBounds(bb[0],bb[0]);bb.forEach(p=>b.extend(p));map.fitBounds(b,{padding:30,maxZoom:16,duration:0})}
   $('#lg').innerHTML=Object.keys(cnt).sort((a,b)=>a-b).map(d=>`<span><i style="background:${col(+d)}"></i>${d>=0?dtxt(d):'без даты'} · ${cnt[d]}</span>`).join('')+'<span style="color:var(--mut)">Цвет района — самая частая дата включения</span>';
 }
-function setMode(m){mode=m;$('#b-list').setAttribute('aria-pressed',m=='list');$('#b-map').setAttribute('aria-pressed',m=='map');
-  $('#mapw').style.display=m=='map'?'block':'none';$('#main').classList.toggle('wide',m=='map');view()}
+function ui(m){mode=m;$('#b-list').setAttribute('aria-pressed',m=='list');$('#b-map').setAttribute('aria-pressed',m=='map');
+  $('#mapw').style.display=m=='map'?'block':'none';$('#main').classList.toggle('wide',m=='map')}
+function setMode(m){ui(m);view()}
 $('#b-list').dataset.gc='view/список';$('#b-map').dataset.gc='view/карта';
 $('#b-list').onclick=()=>setMode('list');$('#b-map').onclick=()=>setMode('map');
 /* ---- фильтры: Все / Тула / Область, ниже — районы ---- */
@@ -285,15 +327,16 @@ function chips(){
   const c1=$('#c1'),c2=$('#c2');c1.innerHTML=c2.innerHTML='';
   const mk=(box,txt,on,gc,fn)=>{const b=document.createElement('button');b.textContent=txt;b.dataset.gc=gc;b.setAttribute('aria-pressed',on);b.onclick=fn;box.append(b)};
   [['Тула',0],['Область',1]].forEach(([n,v])=>mk(c1,n,T===v,'filter/'+n,()=>{T=v;S=null;chips();view()}));
+  if(T===1)mk(c2,'Все районы',S==null,'filter/область/все районы',()=>{S=null;chips();view()});
   if(T>=0)D.forEach(([n,tp],i)=>{if(tp===T)mk(c2,n,S===i,'filter/'+(T?'область/':'тула/')+n,()=>{S=S===i?null:i;chips();view()})});
 }
 const clearSearch=$('#clear-search');clearSearch.dataset.gc='search/clear';
 const sb=()=>{clearSearch.style.display=$('#q').value?'block':'none'};
-$('#q').oninput=()=>{sb();view()};
-clearSearch.onclick=()=>{$('#q').value='';sb();view();$('#q').focus()};
+$('#q').oninput=()=>{sb();view(true)};
+clearSearch.onclick=()=>{$('#q').value='';sb();view(true);$('#q').focus()};
 try{const q=new URLSearchParams(location.search).get('q');if(q){$('#q').value=q;sb()}}catch(e){}
-$('#q').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();view();e.currentTarget.blur()}};
-chips();view();
+$('#q').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();view(true);e.currentTarget.blur()}};
+chips();view(true);
 /* ---- GoatCounter: события на все кнопки и ссылки, плюс поисковые запросы ---- */
 const gc=(p,t)=>{try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:p,title:t||p,event:true})}catch(e){}};
 document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('button,a');if(!el)return;
